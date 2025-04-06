@@ -1,22 +1,22 @@
-# 📊 candle_patterns
+# 📊 candle-patterns
 
 **A Rust library for detecting candlestick chart patterns in historical price data.**  
 Built for speed, flexibility, and integration with custom indicators like ATR, support/resistance levels, and filtered candle sets.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔍 Detects classic candlestick patterns (e.g. Hammer, ATR Spike)
-- 🧱 Modular pattern system via traits
-- 📏 Support for precomputed or dynamic levels (support/resistance)
-- 🔧 Extensible with your own custom indicators
-- 📈 Confidence scoring per signal (0.0–1.0)
-- 💾 Lightweight data model
+- Detects classic candlestick patterns (e.g. Hammer, ATR Spike)
+- Modular pattern system via traits
+- Support for precomputed or dynamic levels (support/resistance)
+- Extensible with your own custom indicators
+- Confidence scoring per signal (0.0–1.0)
+- Lightweight data model
 
 ---
 
-## 📦 Usage
+## Usage
 
 ```rust
 use candle_patterns::candle::Candle;
