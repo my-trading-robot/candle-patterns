@@ -13,13 +13,12 @@ pub struct PatternResult {
     /// - Signal ranking: Sort matches by strength to prioritize
     /// - Visualization: Stronger signals = brighter or more intense display
     /// - Backtesting weight: Higher confidence = higher expected edge
-    /// - ML / strategy input: Use confidence as a feature in decision logic
     ///
     /// `None` means confidence is not applicable or not calculated for that pattern.
     pub confidence: Option<f64>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum SignalDirection {
     Bullish,
     Bearish,
