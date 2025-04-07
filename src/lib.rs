@@ -1,3 +1,5 @@
-pub mod candle;
 pub mod analyzer;
+pub mod candle;
+mod how_candle_crosses_level;
 pub mod patterns;
+pub use how_candle_crosses_level::*;
