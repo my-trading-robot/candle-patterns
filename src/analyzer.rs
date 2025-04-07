@@ -1,4 +1,4 @@
-use crate::candle::{Candle, CandleInstance};
+use crate::candle::Candle;
 use crate::patterns::Pattern;
 
 #[derive(Debug, Clone)]
