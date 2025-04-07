@@ -1,3 +1,5 @@
+use crate::Atr;
+
 #[derive(Debug, PartialEq, PartialOrd)]
 pub struct TechStopLoss(f64);
 
@@ -6,8 +8,8 @@ impl TechStopLoss {
         Self(value)
     }
 
-    pub fn from_crypto_and_us_stock_day_atr(day_atr: f64) -> f64 {
-        day_atr * 0.15
+    pub fn from_crypto_and_us_stock_day_atr(day_atr: Atr) -> f64 {
+        day_atr.to_value() * 0.15
     }
 
     pub fn get_value(&self) -> f64 {
