@@ -86,6 +86,7 @@ pub fn are_candles_bpu1_and_bpu2(
     distance <= luft.get_value()
 }
 
+//Checking after we detect BPU and BSU the price went our way
 pub fn check_bpu_1_bpu_2_and_action(
     bpu_1: &impl Candle,
     bpu_2: &impl Candle,
