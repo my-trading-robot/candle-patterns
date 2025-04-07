@@ -1,4 +1,4 @@
-use crate::candle::Candle;
+use crate::candle::{Candle, CandleInstance};
 use crate::patterns::Pattern;
 
 #[derive(Debug, Clone)]
@@ -8,7 +8,7 @@ pub struct PatternResult {
     pub description: String,
 
     /// Represents the strength or reliability of a pattern match (0.0 to 1.0).
-    /// 
+    ///
     /// - Signal filtering: Ignore weak signals (e.g. `confidence < 0.6`)
     /// - Signal ranking: Sort matches by strength to prioritize
     /// - Visualization: Stronger signals = brighter or more intense display
@@ -25,20 +25,22 @@ pub enum SignalDirection {
     Neutral,
 }
 
-pub struct CandleAnalyzer {
-    patterns: Vec<Box<dyn Pattern>>,
+pub struct CandleAnalyzer<TCandle: Candle> {
+    patterns: Vec<Box<dyn Pattern<TCandle>>>,
 }
 
-impl CandleAnalyzer {
+impl<TCandle: Candle> CandleAnalyzer<TCandle> {
     pub fn new() -> Self {
-        Self { patterns: Vec::new() }
+        Self {
+            patterns: Vec::new(),
+        }
     }
 
-    pub fn register_pattern<P: Pattern + 'static>(&mut self, pattern: P) {
+    pub fn register_pattern<P: Pattern<TCandle> + 'static>(&mut self, pattern: P) {
         self.patterns.push(Box::new(pattern));
     }
 
-    pub fn analyze(&self, candles: &[Candle]) -> Vec<PatternResult> {
+    pub fn analyze(&self, candles: &[TCandle]) -> Vec<PatternResult> {
         self.patterns
             .iter()
             .filter_map(|p| p.matches(candles))

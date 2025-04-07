@@ -1,15 +1,14 @@
-mod hammer;
 mod atr_spike;
+mod hammer;
 mod small_bar_approach;
 
-pub use hammer::Hammer;
 pub use atr_spike::AtrSpike;
+pub use hammer::Hammer;
 pub use small_bar_approach::SmallBarApproach;
 
-use crate::candle::Candle;
 use crate::analyzer::PatternResult;
+use crate::candle::*;
 
-pub trait Pattern {
-    fn name(&self) -> &str;
-    fn matches(&self, candles: &[Candle]) -> Option<PatternResult>;
+pub trait Pattern<TCandle: Candle> {
+    fn matches(&self, candles: &[TCandle]) -> Option<PatternResult>;
 }
