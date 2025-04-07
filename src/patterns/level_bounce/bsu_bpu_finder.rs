@@ -42,7 +42,7 @@ pub fn find_bpu_bsu(candles: &[impl Candle], level: f64, luft: Luft) -> Option<B
     None
 }
 
-fn are_candles_bpu1_and_bpu2(
+pub fn are_candles_bpu1_and_bpu2(
     bpu_1: &impl Candle,
     bpu_2: &impl Candle,
     level: f64,
