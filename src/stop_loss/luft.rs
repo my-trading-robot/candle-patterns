@@ -1,5 +1,6 @@
 use super::TechStopLoss;
 
+#[derive(Debug, Clone, Copy)]
 pub struct Luft(f64);
 
 impl Luft {
@@ -19,5 +20,11 @@ impl Luft {
 impl From<TechStopLoss> for Luft {
     fn from(value: TechStopLoss) -> Self {
         Self::new(value.get_value() * 0.2)
+    }
+}
+
+impl Into<Luft> for f64 {
+    fn into(self) -> Luft {
+        Luft(self)
     }
 }

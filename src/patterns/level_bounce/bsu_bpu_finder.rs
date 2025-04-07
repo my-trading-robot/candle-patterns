@@ -1,4 +1,4 @@
-use crate::{HowCandleCrossesLevel, candle::Candle};
+use crate::{HowCandleCrossesLevel, candle::Candle, stop_loss::Luft};
 
 pub struct BsuBpiIndex {
     pub bsu_index: usize,
@@ -8,7 +8,7 @@ pub struct BsuBpiIndex {
 
 // Returns BSU index
 
-pub fn find_bpu_bsu(candles: &[impl Candle], level: f64, luft: f64) -> Option<BsuBpiIndex> {
+pub fn find_bpu_bsu(candles: &[impl Candle], level: f64, luft: Luft) -> Option<BsuBpiIndex> {
     if candles.len() < 3 {
         return None;
     }
@@ -46,7 +46,7 @@ fn are_candles_bpu1_and_bpu2(
     bpu_1: &impl Candle,
     bpu_2: &impl Candle,
     level: f64,
-    luft: f64,
+    luft: Luft,
 ) -> bool {
     let bpu_1_touch = HowCandleCrossesLevel::from_candle_and_level(bpu_1, level);
     if !bpu_1_touch.is_candle_touches_the_level() {
@@ -83,7 +83,7 @@ fn are_candles_bpu1_and_bpu2(
         _ => return false,
     };
 
-    distance <= luft
+    distance <= luft.to_value()
 }
 
 #[cfg(test)]
@@ -125,7 +125,7 @@ mod tests {
             },
         ];
 
-        let result = super::find_bpu_bsu(&candles, 7.0, 0.02).unwrap();
+        let result = super::find_bpu_bsu(&candles, 7.0, 0.02.into()).unwrap();
 
         assert_eq!(0, result.bsu_index);
         assert_eq!(2, result.bpu_1_index);
@@ -166,7 +166,7 @@ mod tests {
             },
         ];
 
-        let result = super::find_bpu_bsu(&candles, 7.0, 0.02).unwrap();
+        let result = super::find_bpu_bsu(&candles, 7.0, 0.02.into()).unwrap();
 
         assert_eq!(0, result.bsu_index);
         assert_eq!(2, result.bpu_1_index);
@@ -207,7 +207,7 @@ mod tests {
             },
         ];
 
-        let result = super::find_bpu_bsu(&candles, 7.0, 0.02);
+        let result = super::find_bpu_bsu(&candles, 7.0, 0.02.into());
         assert!(result.is_none());
     }
 
@@ -245,7 +245,7 @@ mod tests {
             },
         ];
 
-        let result = super::find_bpu_bsu(&candles, 7.0, 0.5).unwrap();
+        let result = super::find_bpu_bsu(&candles, 7.0, 0.5.into()).unwrap();
 
         assert_eq!(0, result.bsu_index);
         assert_eq!(2, result.bpu_1_index);
@@ -286,7 +286,7 @@ mod tests {
             },
         ];
 
-        let result = super::find_bpu_bsu(&candles, 7.0, 0.05);
+        let result = super::find_bpu_bsu(&candles, 7.0, 0.05.into());
         assert!(result.is_none());
     }
 }
