@@ -83,7 +83,7 @@ fn are_candles_bpu1_and_bpu2(
         _ => return false,
     };
 
-    distance <= luft.to_value()
+    distance <= luft.get_value()
 }
 
 #[cfg(test)]

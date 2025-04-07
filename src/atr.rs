@@ -6,7 +6,7 @@ impl Atr {
         Self(value)
     }
 
-    pub fn to_value(&self) -> f64 {
+    pub fn get_value(&self) -> f64 {
         self.0
     }
 

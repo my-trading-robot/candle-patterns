@@ -9,7 +9,7 @@ impl TechStopLoss {
     }
 
     pub fn from_crypto_and_us_stock_day_atr(day_atr: Atr) -> Self {
-        Self(day_atr.to_value() * 0.15)
+        Self(day_atr.get_value() * 0.15)
     }
 
     pub fn get_value(&self) -> f64 {
