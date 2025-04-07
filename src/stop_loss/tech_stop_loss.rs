@@ -1,6 +1,6 @@
 use crate::Atr;
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct TechStopLoss(f64);
 
 impl TechStopLoss {
