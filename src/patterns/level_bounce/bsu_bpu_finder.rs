@@ -86,6 +86,63 @@ pub fn are_candles_bpu1_and_bpu2(
     distance <= luft.get_value()
 }
 
+pub fn check_bpu_1_bpu_2_and_action(
+    bpu_1: &impl Candle,
+    bpu_2: &impl Candle,
+    next_one: &impl Candle,
+    level: f64,
+    luft: Luft,
+) -> Option<bool> {
+    let bpu_1_touch = HowCandleCrossesLevel::from_candle_and_level(bpu_1, level);
+    if !bpu_1_touch.is_candle_touches_the_level() {
+        return None;
+    }
+
+    let bpu_2_touch = HowCandleCrossesLevel::from_candle_and_level(bpu_2, level);
+
+    let distance = match bpu_2_touch {
+        HowCandleCrossesLevel::CandleIsAbove { distance } => {
+            if bpu_1_touch.is_below_or_touches_below() {
+                return None;
+            }
+            distance
+        }
+        HowCandleCrossesLevel::CandleIsBelow { distance } => {
+            if bpu_1_touch.is_above_or_touches_above() {
+                return None;
+            }
+            distance
+        }
+        HowCandleCrossesLevel::CandleTouchesAbove => {
+            if bpu_1_touch.is_below_or_touches_below() {
+                return None;
+            }
+            0.0
+        }
+        HowCandleCrossesLevel::CandleTouchesBelow => {
+            if bpu_1_touch.is_above_or_touches_above() {
+                return None;
+            }
+            0.0
+        }
+        _ => return None,
+    };
+
+    let result = distance <= luft.get_value();
+
+    if !result {
+        return None;
+    }
+
+    let next_one_cross = HowCandleCrossesLevel::from_candle_and_level(next_one, level);
+
+    if bpu_1_touch.is_below_or_touches_below() {
+        return Some(next_one_cross.is_below_or_touches_below());
+    }
+
+    Some(next_one_cross.is_above_or_touches_above())
+}
+
 #[cfg(test)]
 mod tests {
     use crate::candle::CandleInstance;
