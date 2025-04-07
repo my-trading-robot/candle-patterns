@@ -1,5 +1,6 @@
 mod atr_spike;
 mod hammer;
+pub mod level_bounce;
 mod small_bar_approach;
 
 pub use atr_spike::AtrSpike;
