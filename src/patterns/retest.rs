@@ -3,7 +3,7 @@ use crate::candle::Candle;
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
 const NEAR_RETEST_PERIOD: usize = 10;
 
-pub fn has_near_retest(candles: &[impl Candle], level: f64) -> bool {
+pub fn is_near_retest(candles: &[impl Candle], level: f64) -> bool {
     if candles.len() < 3 {
         return false;
     }
@@ -103,7 +103,7 @@ mod tests {
             },
         ];
 
-        let result = super::has_near_retest(&candles, 7.0);
+        let result = super::is_near_retest(&candles, 7.0);
 
         assert!(!result);
     }
