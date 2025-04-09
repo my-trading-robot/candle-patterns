@@ -24,14 +24,14 @@ impl UsMarketMoment {
 
         let now_time = time.hour() * 100 + time.minute();
 
-        if 0930 <= now_time && now_time <= 1600 {
+        if 0930 <= now_time && now_time < 1600 {
             return Self::Working;
         }
 
         if 0400 <= now_time && now_time < 930 {
             return Self::PreMarket;
         }
-        if 1600 < now_time && now_time < 2000 {
+        if 1600 <= now_time && now_time < 2000 {
             return Self::PostMarket;
         }
 
