@@ -1,54 +1,71 @@
 use crate::candle::Candle;
+use std::collections::BTreeMap;
 
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
-const NEAR_RETEST_PERIOD: usize = 10;
-const LONG_RETEST_PERIOD: usize = 50;
+const NEAR_PERIOD: usize = 10;
+const FAR_PERIOD: usize = 50;
 
 #[derive(Debug, Clone, Copy, PartialEq, Hash, Ord, PartialOrd, Eq)]
-pub enum RetestType {
+pub enum RetestPatternType {
     Near,
-    Long,
+    Far,
 }
 
-pub fn is_retest(candles: &[impl Candle], level: f64) -> Option<RetestType> {
-    if candles.len() < 3 {
-        return None;
-    }
+#[derive(Debug, Clone)]
+pub struct RetestPattern {
+    pub level_tolerance_percent: f64,
+    pub near_period: usize,
+    pub far_period: usize,
+}
 
-    //let mut candles = candles.to_vec();
-    //candles.sort_by(|a, b| a.get_time_key().cmp(&b.get_time_key()));
-
-    let mut bumps_count = 0;
-    let mut result = None;
-
-    for (index, candle) in candles.iter().enumerate() {
-        let bump_dir = bumped_into_level(candle, level, LEVEL_TOLERANCE_PERCENT);
-
-        if bump_dir.is_some() {
-            bumps_count += 1;
+impl Default for RetestPattern {
+    fn default() -> Self {
+        Self {
+            level_tolerance_percent: LEVEL_TOLERANCE_PERCENT,
+            near_period: NEAR_PERIOD,
+            far_period: FAR_PERIOD,
         }
+    }
+}
 
-        if index == 0 && bump_dir.is_none() {
+impl RetestPattern {
+    pub fn matches(&self, candles: &BTreeMap<u64, impl Candle>, level: f64) -> Option<RetestPatternType> {
+        if candles.len() < 3 {
             return None;
         }
 
-        if index == candles.len() - 2 && bump_dir.is_some() {
-            // candle before last candle also bumped into level so we are near level
-            return None;
+        let mut bumps_count = 0;
+        let mut result = None;
+
+        for (index, (_key, candle)) in candles.iter().rev().enumerate() {
+            let bump_dir = bumped_into_level(candle, level, LEVEL_TOLERANCE_PERCENT);
+
+            if bump_dir.is_some() {
+                bumps_count += 1;
+            }
+
+            if index == 0 && bump_dir.is_none() {
+                return None;
+            }
+
+            if index == candles.len() - 2 && bump_dir.is_some() {
+                // candle before last candle also bumped into level so we are near level
+                return None;
+            }
+
+            if index <= NEAR_PERIOD && bumps_count >= 2 {
+                result = Some(RetestPatternType::Near);
+                break;
+            }
+
+            if index <= FAR_PERIOD && bumps_count >= 2 {
+                result = Some(RetestPatternType::Near);
+                break;
+            }
         }
 
-        if index <= NEAR_RETEST_PERIOD && bumps_count >= 2 {
-            result = Some(RetestType::Near);
-            break;
-        }
-
-        if index <= LONG_RETEST_PERIOD && bumps_count >= 2 {
-            result = Some(RetestType::Near);
-            break;
-        }
+        result
     }
-
-    result
 }
 
 fn bumped_into_level(
@@ -83,9 +100,11 @@ pub enum BumpDirection {
 #[cfg(test)]
 mod tests {
     use crate::candle::CandleInstance;
+    use crate::patterns::{RetestPattern, RetestPatternType};
+    use std::collections::BTreeMap;
 
     #[test]
-    fn has_near_retest_1() {
+    fn near_retest_1() {
         let candles = vec![
             CandleInstance {
                 time_key: 0,
@@ -117,8 +136,12 @@ mod tests {
             },
         ];
 
-        let result = super::is_retest(&candles, 7.0);
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().map(|c| (c.time_key, c)).collect();
 
-        assert_eq!(result, None);
+        let pattern = RetestPattern::default();
+        let result = pattern.matches(&candles, 7.0);
+
+        assert_eq!(result, Some(RetestPatternType::Near));
     }
 }
