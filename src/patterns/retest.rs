@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
 const NEAR_PERIOD: usize = 10;
-const FAR_PERIOD: usize = 50;
+const FAR_PERIOD: usize = 30;
 
 #[derive(Debug, Clone, Copy, PartialEq, Hash, Ord, PartialOrd, Eq)]
 pub enum RetestPatternType {
