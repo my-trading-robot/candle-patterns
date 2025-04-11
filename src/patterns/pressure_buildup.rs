@@ -3,7 +3,7 @@ use crate::candle::Candle;
 use crate::get_bounds;
 
 const TOLERANCE_PERCENT: f64 = 10.0;
-const PERIOD: usize = 10;
+const PERIOD: usize = 6;
 
 #[derive(Debug, Clone)]
 pub struct PressureBuildupPattern {
@@ -21,7 +21,7 @@ impl PressureBuildupPattern {
         }
 
         for candle in &last_candles {
-            if candle.get_high() > upper_bound || candle.get_low() < lower_bound {
+            if candle.get_high() > upper_bound || candle.get_high() < lower_bound {
                 return false; // Candle outside tolerance
             }
         }
