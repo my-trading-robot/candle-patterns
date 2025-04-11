@@ -1,5 +1,6 @@
 use crate::candle::Candle;
 use std::collections::BTreeMap;
+use crate::in_range;
 
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
 const NEAR_PERIOD: usize = 10;
@@ -13,7 +14,7 @@ pub enum RetestPatternType {
 
 #[derive(Debug, Clone)]
 pub struct RetestPattern {
-    pub level_tolerance_percent: f64,
+    pub tolerance_percent: f64,
     pub near_period: usize,
     pub far_period: usize,
 }
@@ -21,7 +22,7 @@ pub struct RetestPattern {
 impl Default for RetestPattern {
     fn default() -> Self {
         Self {
-            level_tolerance_percent: LEVEL_TOLERANCE_PERCENT,
+            tolerance_percent: LEVEL_TOLERANCE_PERCENT,
             near_period: NEAR_PERIOD,
             far_period: FAR_PERIOD,
         }
@@ -86,10 +87,6 @@ fn bumped_into_level(
     }
 
     None
-}
-
-fn in_range(value: f64, lower_bound: f64, upper_bound: f64) -> bool {
-    value >= lower_bound && value <= upper_bound
 }
 
 pub enum BumpDirection {
