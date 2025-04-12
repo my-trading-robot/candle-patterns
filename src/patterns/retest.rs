@@ -96,12 +96,12 @@ impl RetestPattern {
                 return None;
             }
 
-            if index <= CLOSE_PERIOD && bumps_count >= 2 {
+            if index <= CLOSE_PERIOD && bumps_count >= 2 && bump_dir.is_some() {
                 result = Some((bump_dir.unwrap(), RetestPatternType::Close));
                 break;
             }
 
-            if index <= LONG_PERIOD && bumps_count >= 2 {
+            if index <= LONG_PERIOD && bumps_count >= 2 && bump_dir.is_some() {
                 result = Some((bump_dir.unwrap(), RetestPatternType::Long));
                 break;
             }
