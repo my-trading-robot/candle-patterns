@@ -1,11 +1,11 @@
 use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
 use crate::get_bounds;
-use crate::patterns::{Pattern};
+use crate::patterns::Pattern;
 use std::collections::BTreeMap;
 
 const TOLERANCE_PERCENT: f64 = 2.0;
-const PERIOD: usize = 6;
+const PERIOD: usize = 4;
 
 #[derive(Debug, Clone)]
 pub struct PressureBuildupPattern {
@@ -65,5 +65,96 @@ impl Default for PressureBuildupPattern {
             tolerance_percent: TOLERANCE_PERCENT,
             period: PERIOD,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::candle::CandleInstance;
+    use crate::patterns::{Pattern, PressureBuildupPattern};
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn test_1() {
+        let candles = vec![
+            CandleInstance {
+                time_key: 0,
+                high: 7.0,
+                open: 5.0,
+                close: 6.0,
+                low: 4.0,
+            },
+            CandleInstance {
+                time_key: 1,
+                high: 7.0,
+                open: 4.0,
+                close: 5.0,
+                low: 3.0,
+            },
+            CandleInstance {
+                time_key: 2,
+                high: 7.0,
+                open: 5.0,
+                close: 6.0,
+                low: 4.0,
+            },
+            CandleInstance {
+                time_key: 3,
+                high: 7.0,
+                open: 5.0,
+                close: 6.0,
+                low: 4.0,
+            },
+        ];
+
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().map(|c| (c.time_key, c)).collect();
+
+        let pattern = PressureBuildupPattern::default();
+        let result = pattern.matches(&candles, 7.0);
+
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn test_2() {
+        let candles = vec![
+            CandleInstance {
+                time_key: 0,
+                high: 6.0,
+                open: 5.0,
+                close: 6.0,
+                low: 4.0,
+            },
+            CandleInstance {
+                time_key: 1,
+                high: 7.0,
+                open: 4.0,
+                close: 5.0,
+                low: 3.0,
+            },
+            CandleInstance {
+                time_key: 2,
+                high: 7.0,
+                open: 5.0,
+                close: 6.0,
+                low: 4.0,
+            },
+            CandleInstance {
+                time_key: 3,
+                high: 7.0,
+                open: 5.0,
+                close: 6.0,
+                low: 4.0,
+            },
+        ];
+
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().map(|c| (c.time_key, c)).collect();
+
+        let pattern = PressureBuildupPattern::default();
+        let result = pattern.matches(&candles, 7.0);
+
+        assert!(result.is_none());
     }
 }
