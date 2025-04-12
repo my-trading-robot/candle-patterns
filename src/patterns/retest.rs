@@ -60,7 +60,7 @@ impl RetestPattern {
             }
 
             if index <= LONG_PERIOD && bumps_count >= 2 {
-                result = Some(RetestPatternType::Close);
+                result = Some(RetestPatternType::Long);
                 break;
             }
         }
