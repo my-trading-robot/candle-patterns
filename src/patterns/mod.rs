@@ -18,5 +18,5 @@ use crate::analyzer::PatternResult;
 use crate::candle::*;
 
 pub trait Pattern<TCandle: Candle> {
-    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult>;
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>, level: f64) -> Option<PatternResult>;
 }

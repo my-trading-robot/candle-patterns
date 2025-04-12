@@ -29,7 +29,7 @@ impl AtrSpike {
 }
 
 impl<TCandle: Candle> Pattern<TCandle> for AtrSpike {
-    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult> {
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>, _level: f64) -> Option<PatternResult> {
         let atr = match self.atr {
             Some(val) => val,
             None => AtrSpike::calc_candle_atr(candles, self.period)?,

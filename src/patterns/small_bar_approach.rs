@@ -1,17 +1,16 @@
-use std::collections::BTreeMap;
 use super::Pattern;
 use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
+use std::collections::BTreeMap;
 
 pub struct SmallBarApproach {
-    pub levels: Vec<f64>,
     pub period: usize,
     pub tuning_factor: f64,
     pub direction: Option<SignalDirection>, // None = auto
 }
 
 impl<TCandle: Candle> Pattern<TCandle> for SmallBarApproach {
-    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult> {
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>, level: f64) -> Option<PatternResult> {
         if candles.len() < self.period {
             return None;
         }
@@ -34,26 +33,24 @@ impl<TCandle: Candle> Pattern<TCandle> for SmallBarApproach {
 
         let last = *window.last()?;
 
-        for &level in &self.levels {
-            let near = match direction {
-                SignalDirection::Bullish => is_near_bullish_level(last, level),
-                SignalDirection::Bearish => is_near_bearish_level(last, level),
-                SignalDirection::Neutral => false,
-            };
+        let near = match direction {
+            SignalDirection::Bullish => is_near_bullish_level(last, level),
+            SignalDirection::Bearish => is_near_bearish_level(last, level),
+            SignalDirection::Neutral => false,
+        };
 
-            if near {
-                return Some(PatternResult {
-                    name: "Small Bar Approach".to_string(),
-                    direction: direction.clone(),
-                    description: format!(
-                        "Small bar approach toward level {:.2} ({:?})",
-                        level, direction
-                    ),
-                    //TODO: Calc automatically
-                    confidence: Some(0.8),
-                    pattern_type: PatternType::SmallBarApproach,
-                });
-            }
+        if near {
+            return Some(PatternResult {
+                name: "Small Bar Approach".to_string(),
+                direction: direction.clone(),
+                description: format!(
+                    "Small bar approach toward level {:.2} ({:?})",
+                    level, direction
+                ),
+                //TODO: Calc automatically
+                confidence: Some(0.8),
+                pattern_type: PatternType::SmallBarApproach,
+            });
         }
 
         None
@@ -131,15 +128,14 @@ mod tests {
         ];
 
         let pattern = SmallBarApproach {
-            levels: vec![100.0],
             period: 3,
             tuning_factor: 1.0,
             direction: None,
         };
         let candles: BTreeMap<u64, CandleInstance> =
             candles.into_iter().map(|c| (c.time_key, c)).collect();
-        
-        let result = pattern.matches(&candles);
+
+        let result = pattern.matches(&candles, 100.0);
         assert!(
             result.is_some(),
             "Expected bullish approach to level from below"
@@ -174,15 +170,14 @@ mod tests {
         ];
 
         let pattern = SmallBarApproach {
-            levels: vec![101.0],
             period: 3,
             tuning_factor: 1.0,
             direction: None,
         };
         let candles: BTreeMap<u64, CandleInstance> =
             candles.into_iter().map(|c| (c.time_key, c)).collect();
-        
-        let result = pattern.matches(&candles);
+
+        let result = pattern.matches(&candles, 101.0);
         assert!(
             result.is_some(),
             "Expected bearish approach to level from above"

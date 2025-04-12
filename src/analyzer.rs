@@ -4,7 +4,8 @@ use crate::patterns::Pattern;
 
 #[derive(Debug, Clone)]
 pub enum PatternType {
-    Retest,
+    CloseRetest,
+    LongRetest,
     PressureBuildup,
     AtrSpike,
     Hammer,
@@ -51,10 +52,10 @@ impl<TCandle: Candle> CandleAnalyzer<TCandle> {
         self.patterns.push(Box::new(pattern));
     }
 
-    pub fn analyze(&self, candles: &BTreeMap<u64, TCandle>) -> Vec<PatternResult> {
+    pub fn analyze(&self, candles: &BTreeMap<u64, TCandle>, level: f64,) -> Vec<PatternResult> {
         self.patterns
             .iter()
-            .filter_map(|p| p.matches(candles))
+            .filter_map(|p| p.matches(candles, level))
             .collect()
     }
 }
