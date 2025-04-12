@@ -1,5 +1,7 @@
+use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
 use crate::get_bounds;
+use crate::patterns::{Pattern};
 use std::collections::BTreeMap;
 
 const TOLERANCE_PERCENT: f64 = 2.0;
@@ -11,17 +13,25 @@ pub struct PressureBuildupPattern {
     pub period: usize,
 }
 
-impl PressureBuildupPattern {
-    pub fn matches(&self, candles: &BTreeMap<u64, impl Candle>, level: f64) -> bool {
+impl<TCandle: Candle> Pattern<TCandle> for PressureBuildupPattern {
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>, level: f64) -> Option<PatternResult> {
         let (lower_bound, upper_bound) = get_bounds(level, self.tolerance_percent);
         let last_candles: Vec<_> = candles.values().rev().take(PERIOD).collect();
 
         if last_candles.len() < PERIOD {
-            return false; // Not enough candles
+            return None; // Not enough candles
         }
 
-        for candle in &last_candles {
-            let is_from_bottom = candle.get_high() <= level;
+        let mut is_from_bottom = false;
+
+        for (i, candle) in last_candles.iter().enumerate() {
+            let prev_is_from_bottom = is_from_bottom;
+            is_from_bottom = candle.get_high() <= level;
+
+            if i > 0 && prev_is_from_bottom != is_from_bottom {
+                return None;
+            }
+
             let price = if is_from_bottom {
                 candle.get_high()
             } else {
@@ -29,11 +39,23 @@ impl PressureBuildupPattern {
             };
 
             if price > upper_bound || price < lower_bound {
-                return false; // Candle outside tolerance
+                return None; // Candle outside tolerance
             }
         }
 
-        true
+        let pattern_type = PatternType::PressureBuildup;
+
+        Some(PatternResult {
+            name: format!("{:?}", pattern_type),
+            direction: if is_from_bottom {
+                SignalDirection::Bearish
+            } else {
+                SignalDirection::Bullish
+            },
+            description: "".to_string(),
+            confidence: None,
+            pattern_type,
+        })
     }
 }
 
