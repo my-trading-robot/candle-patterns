@@ -41,10 +41,18 @@ pub struct CandleAnalyzer<TCandle: Candle> {
     patterns: Vec<Box<dyn Pattern<TCandle>>>,
 }
 
-impl<TCandle: Candle> CandleAnalyzer<TCandle> {
-    pub fn new() -> Self {
+impl<TCandle: Candle> Default for CandleAnalyzer<TCandle> {
+    fn default() -> Self {
         Self {
             patterns: Vec::new(),
+        }
+    }
+}
+
+impl<TCandle: Candle> CandleAnalyzer<TCandle> {
+    pub fn new(patterns: Vec<Box<dyn Pattern<TCandle>>>) -> Self {
+        Self {
+            patterns,
         }
     }
 
