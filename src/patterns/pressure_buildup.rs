@@ -26,7 +26,7 @@ impl<TCandle: Candle> Pattern<TCandle> for PressureBuildupPattern {
 
         for (i, candle) in last_candles.iter().enumerate() {
             let prev_under_level = under_level;
-            under_level = candle.get_high() <= level;
+            under_level = candle.get_high() <= upper_bound;
 
             if i > 0 && prev_under_level != under_level {
                 return None;
