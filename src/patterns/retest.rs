@@ -1,12 +1,13 @@
 use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
 use crate::in_range;
-use crate::patterns::{Pattern};
+use crate::patterns::Pattern;
 use std::collections::BTreeMap;
 
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
 const CLOSE_PERIOD: usize = 10;
 const LONG_PERIOD: usize = 30;
+const DEPTH_PERIOD: usize = 10;
 
 #[derive(Debug, Clone, Copy, PartialEq, Hash, Ord, PartialOrd, Eq)]
 pub enum RetestPatternType {
@@ -19,6 +20,7 @@ pub struct RetestPattern {
     pub tolerance_percent: f64,
     pub close_period: usize,
     pub long_period: usize,
+    pub depth_period: usize,
 }
 
 impl<TCandle: Candle> Pattern<TCandle> for RetestPattern {
@@ -57,6 +59,7 @@ impl Default for RetestPattern {
             tolerance_percent: LEVEL_TOLERANCE_PERCENT,
             close_period: CLOSE_PERIOD,
             long_period: LONG_PERIOD,
+            depth_period: DEPTH_PERIOD,
         }
     }
 }
@@ -182,6 +185,9 @@ mod tests {
         let pattern = RetestPattern::default();
         let result = pattern.get_type(&candles, 7.0);
 
-        assert_eq!(result, Some((BumpDirection::FromBelow, RetestPatternType::Close)));
+        assert_eq!(
+            result,
+            Some((BumpDirection::FromBelow, RetestPatternType::Close))
+        );
     }
 }
