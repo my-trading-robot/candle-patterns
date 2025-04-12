@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use super::Pattern;
 use crate::analyzer::{PatternResult, SignalDirection};
 use crate::candle::Candle;
@@ -10,7 +11,7 @@ pub struct AtrSpike {
 }
 
 impl AtrSpike {
-    pub fn calc_candle_atr(candles: &[impl Candle], period: usize) -> Option<f64> {
+    pub fn calc_candle_atr(candles: &BTreeMap<u64, impl Candle>, period: usize) -> Option<f64> {
         if candles.len() < period {
             return None;
         }
@@ -19,7 +20,7 @@ impl AtrSpike {
             .iter()
             .rev()
             .take(period)
-            .map(|c| c.get_high() - c.get_low())
+            .map(|(_, c)| c.get_high() - c.get_low())
             .sum::<f64>()
             / period as f64;
 
@@ -28,12 +29,12 @@ impl AtrSpike {
 }
 
 impl<TCandle: Candle> Pattern<TCandle> for AtrSpike {
-    fn matches(&self, candles: &[TCandle]) -> Option<PatternResult> {
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult> {
         let atr = match self.atr {
             Some(val) => val,
             None => AtrSpike::calc_candle_atr(candles, self.period)?,
         };
-        let last = candles.last()?;
+        let (_, last) = candles.iter().last()?;
         let range = last.get_high() - last.get_low();
         let threshold = self.multiplier * atr;
 
@@ -77,7 +78,9 @@ mod tests {
             make_candle(120.0, 110.0),
             make_candle(130.0, 120.0),
         ];
-
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().enumerate().map(|(i, c)| (c.time_key + i as u64, c)).collect();
+        
         let atr = AtrSpike::calc_candle_atr(&candles, 3);
         assert_eq!(atr, Some(10.0));
     }
@@ -85,7 +88,8 @@ mod tests {
     #[test]
     fn test_atr_calc_not_enough_data() {
         let candles = vec![make_candle(110.0, 100.0), make_candle(120.0, 110.0)];
-
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().map(|c| (c.time_key, c)).collect();
         let atr = AtrSpike::calc_candle_atr(&candles, 3);
         assert_eq!(atr, None);
     }
@@ -97,7 +101,8 @@ mod tests {
             make_candle(100.0, 100.0),
             make_candle(100.0, 100.0),
         ];
-
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().enumerate().map(|(i, c)| (c.time_key + i as u64, c)).collect();
         let atr = AtrSpike::calc_candle_atr(&candles, 3);
         assert_eq!(atr, Some(0.0));
     }

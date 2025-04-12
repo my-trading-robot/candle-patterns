@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use super::Pattern;
 use crate::analyzer::{PatternResult, SignalDirection};
 use crate::candle::Candle;
@@ -7,8 +8,8 @@ pub struct Hammer {
 }
 
 impl<TCandle: Candle> Pattern<TCandle> for Hammer {
-    fn matches(&self, candles: &[TCandle]) -> Option<PatternResult> {
-        let last = candles.last()?;
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult> {
+        let (_, last) = candles.iter().last()?;
         let body = (last.get_open() - last.get_close()).abs();
         let lower_wick = last.get_open().min(last.get_close()) - last.get_low();
         let upper_wick = last.get_high() - last.get_open().max(last.get_close());

@@ -6,6 +6,7 @@ mod trend;
 mod retest;
 mod pressure_buildup;
 
+use std::collections::BTreeMap;
 pub use atr_spike::AtrSpike;
 pub use hammer::Hammer;
 pub use small_bar_approach::SmallBarApproach;
@@ -17,5 +18,5 @@ use crate::analyzer::PatternResult;
 use crate::candle::*;
 
 pub trait Pattern<TCandle: Candle> {
-    fn matches(&self, candles: &[TCandle]) -> Option<PatternResult>;
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult>;
 }

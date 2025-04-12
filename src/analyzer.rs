@@ -1,5 +1,12 @@
+use std::collections::BTreeMap;
 use crate::candle::Candle;
 use crate::patterns::Pattern;
+
+#[derive(Debug, Clone)]
+pub enum PatternType {
+    Retest,
+    PressureBuildup,
+}
 
 #[derive(Debug, Clone)]
 pub struct PatternResult {
@@ -40,7 +47,7 @@ impl<TCandle: Candle> CandleAnalyzer<TCandle> {
         self.patterns.push(Box::new(pattern));
     }
 
-    pub fn analyze(&self, candles: &[TCandle]) -> Vec<PatternResult> {
+    pub fn analyze(&self, candles: &BTreeMap<u64, TCandle>) -> Vec<PatternResult> {
         self.patterns
             .iter()
             .filter_map(|p| p.matches(candles))

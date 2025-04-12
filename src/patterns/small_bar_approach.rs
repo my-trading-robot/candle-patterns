@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use super::Pattern;
 use crate::analyzer::{PatternResult, SignalDirection};
 use crate::candle::Candle;
@@ -10,18 +11,19 @@ pub struct SmallBarApproach {
 }
 
 impl<TCandle: Candle> Pattern<TCandle> for SmallBarApproach {
-    fn matches(&self, candles: &[TCandle]) -> Option<PatternResult> {
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>) -> Option<PatternResult> {
         if candles.len() < self.period {
             return None;
         }
 
+        let candles: Vec<&TCandle> = candles.values().collect();
         let window = &candles[candles.len() - self.period..];
 
         let avg_body_ratio = compute_avg_body_ratio(window);
         let threshold = (avg_body_ratio * self.tuning_factor).max(0.25);
         // println!("AVG: {:.4}, THRESHOLD: {:.4}", avg_body_ratio, threshold);
 
-        if !window.iter().all(|c| is_small_bar(c, threshold)) {
+        if !window.iter().all(|c| is_small_bar(*c, threshold)) {
             return None;
         }
 
@@ -30,7 +32,7 @@ impl<TCandle: Candle> Pattern<TCandle> for SmallBarApproach {
             None => auto_detect_direction(window)?,
         };
 
-        let last = window.last()?;
+        let last = *window.last()?;
 
         for &level in &self.levels {
             let near = match direction {
@@ -63,7 +65,7 @@ fn is_small_bar(c: &impl Candle, threshold: f64) -> bool {
     range > 0.0 && (body / range) <= threshold + f64::EPSILON
 }
 
-fn compute_avg_body_ratio(candles: &[impl Candle]) -> f64 {
+fn compute_avg_body_ratio(candles: &[&impl Candle]) -> f64 {
     candles
         .iter()
         .map(|c| {
@@ -75,7 +77,7 @@ fn compute_avg_body_ratio(candles: &[impl Candle]) -> f64 {
         / candles.len() as f64
 }
 
-fn auto_detect_direction(candles: &[impl Candle]) -> Option<SignalDirection> {
+fn auto_detect_direction(candles: &[&impl Candle]) -> Option<SignalDirection> {
     let first = candles.first()?.get_close();
     let last = candles.last()?.get_close();
     Some(if last > first {
@@ -133,7 +135,9 @@ mod tests {
             tuning_factor: 1.0,
             direction: None,
         };
-
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().map(|c| (c.time_key, c)).collect();
+        
         let result = pattern.matches(&candles);
         assert!(
             result.is_some(),
@@ -174,7 +178,9 @@ mod tests {
             tuning_factor: 1.0,
             direction: None,
         };
-
+        let candles: BTreeMap<u64, CandleInstance> =
+            candles.into_iter().map(|c| (c.time_key, c)).collect();
+        
         let result = pattern.matches(&candles);
         assert!(
             result.is_some(),
