@@ -22,17 +22,17 @@ impl<TCandle: Candle> Pattern<TCandle> for PressureBuildupPattern {
             return None; // Not enough candles
         }
 
-        let mut is_from_bottom = false;
+        let mut under_level = false;
 
         for (i, candle) in last_candles.iter().enumerate() {
-            let prev_is_from_bottom = is_from_bottom;
-            is_from_bottom = candle.get_high() <= level;
+            let prev_under_level = under_level;
+            under_level = candle.get_high() <= level;
 
-            if i > 0 && prev_is_from_bottom != is_from_bottom {
+            if i > 0 && prev_under_level != under_level {
                 return None;
             }
 
-            let price = if is_from_bottom {
+            let price = if under_level {
                 candle.get_high()
             } else {
                 candle.get_low()
@@ -47,7 +47,7 @@ impl<TCandle: Candle> Pattern<TCandle> for PressureBuildupPattern {
 
         Some(PatternResult {
             name: format!("{:?}", pattern_type),
-            direction: if is_from_bottom {
+            direction: if under_level {
                 SignalDirection::Bearish
             } else {
                 SignalDirection::Bullish
