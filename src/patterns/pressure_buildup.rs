@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use crate::candle::Candle;
 use crate::get_bounds;
 
-const TOLERANCE_PERCENT: f64 = 10.0;
+const TOLERANCE_PERCENT: f64 = 2.0;
 const PERIOD: usize = 6;
 
 #[derive(Debug, Clone)]
