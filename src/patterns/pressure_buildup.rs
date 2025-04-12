@@ -1,6 +1,6 @@
-use std::collections::BTreeMap;
 use crate::candle::Candle;
 use crate::get_bounds;
+use std::collections::BTreeMap;
 
 const TOLERANCE_PERCENT: f64 = 2.0;
 const PERIOD: usize = 6;
@@ -21,7 +21,14 @@ impl PressureBuildupPattern {
         }
 
         for candle in &last_candles {
-            if candle.get_high() > upper_bound || candle.get_high() < lower_bound {
+            let is_from_bottom = candle.get_high() <= level;
+            let price = if is_from_bottom {
+                candle.get_high()
+            } else {
+                candle.get_low()
+            };
+
+            if price > upper_bound || price < lower_bound {
                 return false; // Candle outside tolerance
             }
         }
