@@ -1,6 +1,8 @@
+use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
-use std::collections::BTreeMap;
 use crate::in_range;
+use crate::patterns::{Pattern};
+use std::collections::BTreeMap;
 
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
 const CLOSE_PERIOD: usize = 10;
@@ -19,6 +21,36 @@ pub struct RetestPattern {
     pub long_period: usize,
 }
 
+impl<TCandle: Candle> Pattern<TCandle> for RetestPattern {
+    fn matches(&self, candles: &BTreeMap<u64, TCandle>, level: f64) -> Option<PatternResult> {
+        let (direction, pattern_type) = self.get_type(candles, level)?;
+        let name = format!("{:?}", pattern_type);
+
+        let direction = match direction {
+            BumpDirection::FromBelow => SignalDirection::Bullish,
+            BumpDirection::FromAbove => SignalDirection::Bearish,
+        };
+
+        let result = match pattern_type {
+            RetestPatternType::Close => PatternResult {
+                name,
+                direction,
+                description: "".to_string(),
+                confidence: None,
+                pattern_type: PatternType::CloseRetest,
+            },
+            RetestPatternType::Long => PatternResult {
+                name,
+                direction,
+                description: "".to_string(),
+                confidence: None,
+                pattern_type: PatternType::LongRetest,
+            },
+        };
+
+        Some(result)
+    }
+}
 impl Default for RetestPattern {
     fn default() -> Self {
         Self {
@@ -30,16 +62,22 @@ impl Default for RetestPattern {
 }
 
 impl RetestPattern {
-    pub fn matches(&self, candles: &BTreeMap<u64, impl Candle>, level: f64) -> Option<RetestPatternType> {
+    pub fn get_type(
+        &self,
+        candles: &BTreeMap<u64, impl Candle>,
+        level: f64,
+    ) -> Option<(BumpDirection, RetestPatternType)> {
         if candles.len() < 3 {
             return None;
         }
 
         let mut bumps_count = 0;
         let mut result = None;
+        let mut bump_dir = None;
 
         for (index, (_key, candle)) in candles.iter().rev().enumerate() {
-            let bump_dir = bumped_into_level(candle, level, LEVEL_TOLERANCE_PERCENT);
+            let prev_bump_dir = bump_dir;
+            bump_dir = bumped_into_level(candle, level, LEVEL_TOLERANCE_PERCENT);
 
             if bump_dir.is_some() {
                 bumps_count += 1;
@@ -49,18 +87,22 @@ impl RetestPattern {
                 return None;
             }
 
+            if prev_bump_dir.is_some() && bump_dir.is_some() && prev_bump_dir != bump_dir {
+                return None;
+            }
+
             if index == candles.len() - 2 && bump_dir.is_some() {
                 // candle before last candle also bumped into level so we are near level
                 return None;
             }
 
             if index <= CLOSE_PERIOD && bumps_count >= 2 {
-                result = Some(RetestPatternType::Close);
+                result = Some((bump_dir.unwrap(), RetestPatternType::Close));
                 break;
             }
 
             if index <= LONG_PERIOD && bumps_count >= 2 {
-                result = Some(RetestPatternType::Long);
+                result = Some((bump_dir.unwrap(), RetestPatternType::Long));
                 break;
             }
         }
@@ -89,6 +131,7 @@ fn bumped_into_level(
     None
 }
 
+#[derive(Debug, Clone, PartialEq, Hash, Ord, PartialOrd, Eq)]
 pub enum BumpDirection {
     FromBelow,
     FromAbove,
@@ -97,7 +140,7 @@ pub enum BumpDirection {
 #[cfg(test)]
 mod tests {
     use crate::candle::CandleInstance;
-    use crate::patterns::{RetestPattern, RetestPatternType};
+    use crate::patterns::{BumpDirection, RetestPattern, RetestPatternType};
     use std::collections::BTreeMap;
 
     #[test]
@@ -137,8 +180,8 @@ mod tests {
             candles.into_iter().map(|c| (c.time_key, c)).collect();
 
         let pattern = RetestPattern::default();
-        let result = pattern.matches(&candles, 7.0);
+        let result = pattern.get_type(&candles, 7.0);
 
-        assert_eq!(result, Some(RetestPatternType::Close));
+        assert_eq!(result, Some((BumpDirection::FromBelow, RetestPatternType::Close)));
     }
 }
