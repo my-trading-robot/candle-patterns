@@ -6,6 +6,9 @@ use crate::patterns::Pattern;
 pub enum PatternType {
     Retest,
     PressureBuildup,
+    AtrSpike,
+    Hammer,
+    SmallBarApproach,
 }
 
 #[derive(Debug, Clone)]
@@ -23,6 +26,7 @@ pub struct PatternResult {
     ///
     /// `None` means confidence is not applicable or not calculated for that pattern.
     pub confidence: Option<f64>,
+    pub pattern_type: PatternType,
 }
 
 #[derive(Debug, Clone, PartialEq)]

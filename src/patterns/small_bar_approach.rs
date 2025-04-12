@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use super::Pattern;
-use crate::analyzer::{PatternResult, SignalDirection};
+use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
 
 pub struct SmallBarApproach {
@@ -51,6 +51,7 @@ impl<TCandle: Candle> Pattern<TCandle> for SmallBarApproach {
                     ),
                     //TODO: Calc automatically
                     confidence: Some(0.8),
+                    pattern_type: PatternType::SmallBarApproach,
                 });
             }
         }

@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use super::Pattern;
-use crate::analyzer::{PatternResult, SignalDirection};
+use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
 
 pub struct Hammer {
@@ -32,6 +32,7 @@ impl<TCandle: Candle> Pattern<TCandle> for Hammer {
             direction: SignalDirection::Bullish,
             description,
             confidence: None,
+            pattern_type: PatternType::Hammer,
         })
     }
 }

@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use super::Pattern;
-use crate::analyzer::{PatternResult, SignalDirection};
+use crate::analyzer::{PatternResult, PatternType, SignalDirection};
 use crate::candle::Candle;
 
 pub struct AtrSpike {
@@ -52,6 +52,7 @@ impl<TCandle: Candle> Pattern<TCandle> for AtrSpike {
                 range, self.multiplier, atr
             ),
             confidence: Some(confidence),
+            pattern_type: PatternType::AtrSpike,
         })
     }
 }
