@@ -3,28 +3,28 @@ use std::collections::BTreeMap;
 use crate::in_range;
 
 const LEVEL_TOLERANCE_PERCENT: f64 = 2.0;
-const NEAR_PERIOD: usize = 10;
-const FAR_PERIOD: usize = 30;
+const CLOSE_PERIOD: usize = 10;
+const LONG_PERIOD: usize = 30;
 
 #[derive(Debug, Clone, Copy, PartialEq, Hash, Ord, PartialOrd, Eq)]
 pub enum RetestPatternType {
-    Near,
-    Far,
+    Close,
+    Long,
 }
 
 #[derive(Debug, Clone)]
 pub struct RetestPattern {
     pub tolerance_percent: f64,
-    pub near_period: usize,
-    pub far_period: usize,
+    pub close_period: usize,
+    pub long_period: usize,
 }
 
 impl Default for RetestPattern {
     fn default() -> Self {
         Self {
             tolerance_percent: LEVEL_TOLERANCE_PERCENT,
-            near_period: NEAR_PERIOD,
-            far_period: FAR_PERIOD,
+            close_period: CLOSE_PERIOD,
+            long_period: LONG_PERIOD,
         }
     }
 }
@@ -54,13 +54,13 @@ impl RetestPattern {
                 return None;
             }
 
-            if index <= NEAR_PERIOD && bumps_count >= 2 {
-                result = Some(RetestPatternType::Near);
+            if index <= CLOSE_PERIOD && bumps_count >= 2 {
+                result = Some(RetestPatternType::Close);
                 break;
             }
 
-            if index <= FAR_PERIOD && bumps_count >= 2 {
-                result = Some(RetestPatternType::Near);
+            if index <= LONG_PERIOD && bumps_count >= 2 {
+                result = Some(RetestPatternType::Close);
                 break;
             }
         }
@@ -139,6 +139,6 @@ mod tests {
         let pattern = RetestPattern::default();
         let result = pattern.matches(&candles, 7.0);
 
-        assert_eq!(result, Some(RetestPatternType::Near));
+        assert_eq!(result, Some(RetestPatternType::Close));
     }
 }
