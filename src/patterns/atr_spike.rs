@@ -11,7 +11,7 @@ pub struct AtrSpike {
 }
 
 impl AtrSpike {
-    pub fn calc_candle_atr(candles: &BTreeMap<u64, impl Candle>, period: usize) -> Option<f64> {
+    pub fn calc_candle_atr<T: Candle>(candles: &BTreeMap<u64, T>, period: usize) -> Option<f64> {
         if candles.len() < period {
             return None;
         }
