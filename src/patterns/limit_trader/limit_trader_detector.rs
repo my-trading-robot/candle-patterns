@@ -6,22 +6,22 @@ const LPD_TOLERANCE_PERCENT: f64 = 0.2;
 const LPD_MIN_DEPTH: usize = 3;
 
 #[derive(Debug, Clone)]
-pub struct LimitPlayerDetectorPattern {
+pub struct LimitTraderDetectorPattern {
     pub tolerance_percent: f64,
     pub min_depth: usize,
 }
-pub struct LimitPlayerSignal {
+pub struct LimitTraderSignal {
     pub level: f64,               
-    pub side: LimitPlayerSide, 
+    pub side: LimitTraderSide, 
 }
 
 #[derive(Debug, PartialEq)]
-pub enum LimitPlayerSide {
-    Buyer,  // Limit player on lows
-    Seller, // Limit player on highs
+pub enum LimitTraderSide {
+    Buyer,  // Limit Trader on lows
+    Seller, // Limit Trader on highs
 }
 
-impl Default for LimitPlayerDetectorPattern {
+impl Default for LimitTraderDetectorPattern {
     fn default() -> Self {
         Self {
             tolerance_percent: LPD_TOLERANCE_PERCENT,
@@ -30,8 +30,8 @@ impl Default for LimitPlayerDetectorPattern {
     }
 }
 
-impl LimitPlayerDetectorPattern {
-    pub fn detect<T: Candle>(&self, candles: &BTreeMap<u64, T>) -> Option<LimitPlayerSignal> {
+impl LimitTraderDetectorPattern {
+    pub fn detect<T: Candle>(&self, candles: &BTreeMap<u64, T>) -> Option<LimitTraderSignal> {
         let candle_vec: Vec<&T> = candles.values().rev().collect();
 
         if candle_vec.len() < self.min_depth {
@@ -60,14 +60,14 @@ impl LimitPlayerDetectorPattern {
             let down_count = window.iter().filter(|c| c.get_close() < c.get_open()).count();
 
             if highs_near && up_count > 0 && down_count > 0 {
-                return Some(LimitPlayerSignal {
+                return Some(LimitTraderSignal {
                     level: avg_high,
-                    side: LimitPlayerSide::Seller,
+                    side: LimitTraderSide::Seller,
                 });
             } else if lows_near && up_count > 0 && down_count > 0 {
-                return Some(LimitPlayerSignal {
+                return Some(LimitTraderSignal {
                     level: avg_low,
-                    side: LimitPlayerSide::Buyer,
+                    side: LimitTraderSide::Buyer,
                 });
             }
         }
@@ -96,12 +96,12 @@ mod tests {
             map.insert(candle.time_key, candle);
         }
 
-        let detector = LimitPlayerDetectorPattern::default();
+        let detector = LimitTraderDetectorPattern::default();
         let result = detector.detect(&map);
 
         assert!(result.is_some());
         let signal = result.unwrap();
-        assert_eq!(signal.side, LimitPlayerSide::Seller);
+        assert_eq!(signal.side, LimitTraderSide::Seller);
         println!("Detected Seller at {:.2}", signal.level);
     }
 
@@ -118,12 +118,12 @@ mod tests {
             map.insert(candle.time_key, candle);
         }
 
-        let detector = LimitPlayerDetectorPattern::default();
+        let detector = LimitTraderDetectorPattern::default();
         let result = detector.detect(&map);
 
         assert!(result.is_some());
         let signal = result.unwrap();
-        assert_eq!(signal.side, LimitPlayerSide::Buyer);
+        assert_eq!(signal.side, LimitTraderSide::Buyer);
         println!("Detected Buyer at {:.2}", signal.level);
     }
 
@@ -140,7 +140,7 @@ mod tests {
             map.insert(candle.time_key, candle);
         }
 
-        let detector = LimitPlayerDetectorPattern::default();
+        let detector = LimitTraderDetectorPattern::default();
         let result = detector.detect(&map);
 
         assert!(result.is_none());
