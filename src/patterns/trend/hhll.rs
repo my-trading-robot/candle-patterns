@@ -78,6 +78,7 @@ mod tests {
                 high: 2.0,
                 low: 0.5,
                 close: 1.5,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 3,
@@ -85,6 +86,7 @@ mod tests {
                 high: 2.1,
                 low: 0.6,
                 close: 1.6,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2,
@@ -92,6 +94,7 @@ mod tests {
                 high: 2.3,
                 low: 0.7,
                 close: 1.7,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 1,
@@ -99,6 +102,7 @@ mod tests {
                 high: 2.4,
                 low: 0.8,
                 close: 1.8,
+                volume: 1.0,
             },
         ];
 
@@ -108,26 +112,26 @@ mod tests {
     #[test]
     fn detects_trend_with_various_candle_counts_and_ratios() {
         let candles = vec![
-            CandleInstance { time_key: 20250409, open: 172.1, high: 198.98, low: 168.0, close: 195.86 },
-            CandleInstance { time_key: 20250408, open: 183.88, high: 190.335, low: 169.1, close: 169.45 },
-            CandleInstance { time_key: 20250407, open: 177.87, high: 194.15, low: 174.43, close: 182.68 },
-            CandleInstance { time_key: 20250404, open: 203.11, high: 203.46, low: 186.44, close: 186.6 },
-            CandleInstance { time_key: 20250403, open: 210.78, high: 211.03, low: 201.25, close: 203.38 },
-            CandleInstance { time_key: 20250402, open: 222.82, high: 225.5, low: 206.15, close: 207.91 },
-            CandleInstance { time_key: 20250401, open: 221.42, high: 224.0, low: 218.9, close: 223.45 },
-            CandleInstance { time_key: 20250331, open: 215.74, high: 225.62, low: 215.0, close: 221.1999 },
-            CandleInstance { time_key: 20250328, open: 222.0, high: 223.85, low: 217.22, close: 217.22 },
-            CandleInstance { time_key: 20250327, open: 221.0, high: 224.99, low: 220.5, close: 223.46 },
-            CandleInstance { time_key: 20250326, open: 223.94, high: 225.02, low: 220.47, close: 221.53 },
-            CandleInstance { time_key: 20250325, open: 220.5, high: 224.33, low: 220.05, close: 224.18 },
-            CandleInstance { time_key: 20250324, open: 219.8, high: 221.48, low: 218.58, close: 220.74 },
-            CandleInstance { time_key: 20250321, open: 213.9, high: 218.84, low: 209.2, close: 217.8799 },
-            CandleInstance { time_key: 20250320, open: 216.24, high: 217.4899, low: 212.22, close: 213.7 },
-            CandleInstance { time_key: 20250319, open: 213.58, high: 218.76, low: 212.62, close: 216.15 },
-            CandleInstance { time_key: 20250318, open: 213.73, high: 215.15, low: 211.49, close: 213.0 },
-            CandleInstance { time_key: 20250317, open: 212.86, high: 215.22, low: 209.97, close: 213.93 },
-            CandleInstance { time_key: 20250314, open: 210.72, high: 213.95, low: 209.58, close: 213.29 },
-            CandleInstance { time_key: 20250313, open: 216.0, high: 216.98, low: 208.42, close: 210.2 },
+            CandleInstance { time_key: 20250409, open: 172.1, high: 198.98, low: 168.0, close: 195.86, volume: 1.0, },
+            CandleInstance { time_key: 20250408, open: 183.88, high: 190.335, low: 169.1, close: 169.45, volume: 1.0, },
+            CandleInstance { time_key: 20250407, open: 177.87, high: 194.15, low: 174.43, close: 182.68, volume: 1.0, },
+            CandleInstance { time_key: 20250404, open: 203.11, high: 203.46, low: 186.44, close: 186.6, volume: 1.0, },
+            CandleInstance { time_key: 20250403, open: 210.78, high: 211.03, low: 201.25, close: 203.38, volume: 1.0, },
+            CandleInstance { time_key: 20250402, open: 222.82, high: 225.5, low: 206.15, close: 207.91, volume: 1.0, },
+            CandleInstance { time_key: 20250401, open: 221.42, high: 224.0, low: 218.9, close: 223.45, volume: 1.0, },
+            CandleInstance { time_key: 20250331, open: 215.74, high: 225.62, low: 215.0, close: 221.1999, volume: 1.0, },
+            CandleInstance { time_key: 20250328, open: 222.0, high: 223.85, low: 217.22, close: 217.22, volume: 1.0, },
+            CandleInstance { time_key: 20250327, open: 221.0, high: 224.99, low: 220.5, close: 223.46, volume: 1.0, },
+            CandleInstance { time_key: 20250326, open: 223.94, high: 225.02, low: 220.47, close: 221.53, volume: 1.0, },
+            CandleInstance { time_key: 20250325, open: 220.5, high: 224.33, low: 220.05, close: 224.18, volume: 1.0, },
+            CandleInstance { time_key: 20250324, open: 219.8, high: 221.48, low: 218.58, close: 220.74, volume: 1.0, },
+            CandleInstance { time_key: 20250321, open: 213.9, high: 218.84, low: 209.2, close: 217.8799, volume: 1.0, },
+            CandleInstance { time_key: 20250320, open: 216.24, high: 217.4899, low: 212.22, close: 213.7, volume: 1.0, },
+            CandleInstance { time_key: 20250319, open: 213.58, high: 218.76, low: 212.62, close: 216.15, volume: 1.0, },
+            CandleInstance { time_key: 20250318, open: 213.73, high: 215.15, low: 211.49, close: 213.0, volume: 1.0, },
+            CandleInstance { time_key: 20250317, open: 212.86, high: 215.22, low: 209.97, close: 213.93, volume: 1.0, },
+            CandleInstance { time_key: 20250314, open: 210.72, high: 213.95, low: 209.58, close: 213.29, volume: 1.0, },
+            CandleInstance { time_key: 20250313, open: 216.0, high: 216.98, low: 208.42, close: 210.2, volume: 1.0, },
         ];
         
         run_case(&candles[..10], 0.8, TrendDirection::Down);
@@ -145,6 +149,7 @@ mod tests {
                 high: 86.48,
                 low: 83.79,
                 close: 85.97,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025041018,
@@ -152,6 +157,7 @@ mod tests {
                 high: 85.39,
                 low: 83.82,
                 close: 84.22,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025041017,
@@ -159,6 +165,7 @@ mod tests {
                 high: 84.23,
                 low: 81.07,
                 close: 84.12,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025041016,
@@ -166,6 +173,7 @@ mod tests {
                 high: 83.46,
                 low: 81.31,
                 close: 83.085,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025041015,
@@ -173,6 +181,7 @@ mod tests {
                 high: 85.86,
                 low: 81.95,
                 close: 82.12,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025041014,
@@ -180,6 +189,7 @@ mod tests {
                 high: 87.1,
                 low: 82.95,
                 close: 85.85,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025041013,
@@ -187,6 +197,7 @@ mod tests {
                 high: 83.9897,
                 low: 82.31,
                 close: 83.22,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040919,
@@ -194,6 +205,7 @@ mod tests {
                 high: 86.25,
                 low: 82.77,
                 close: 85.36,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040918,
@@ -201,6 +213,7 @@ mod tests {
                 high: 86.2042,
                 low: 82.901,
                 close: 83.565,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040917,
@@ -208,6 +221,7 @@ mod tests {
                 high: 84.4999,
                 low: 78.3,
                 close: 83.895,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040916,
@@ -215,6 +229,7 @@ mod tests {
                 high: 79.3,
                 low: 77.125,
                 close: 79.12,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040915,
@@ -222,6 +237,7 @@ mod tests {
                 high: 77.97,
                 low: 76.605,
                 close: 77.125,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040914,
@@ -229,6 +245,7 @@ mod tests {
                 high: 79.24,
                 low: 76.03,
                 close: 76.6,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040913,
@@ -236,6 +253,7 @@ mod tests {
                 high: 76.96,
                 low: 74.07,
                 close: 76.27,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040819,
@@ -243,6 +261,7 @@ mod tests {
                 high: 75.54,
                 low: 73.77,
                 close: 75.38,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040818,
@@ -250,6 +269,7 @@ mod tests {
                 high: 76.71,
                 low: 75.04,
                 close: 75.44,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040817,
@@ -257,6 +277,7 @@ mod tests {
                 high: 77.2599,
                 low: 75.245,
                 close: 76.03,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040816,
@@ -264,6 +285,7 @@ mod tests {
                 high: 78.52,
                 low: 76.89,
                 close: 76.89,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040815,
@@ -271,6 +293,7 @@ mod tests {
                 high: 79.35,
                 low: 77.37,
                 close: 78.63,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2025040814,
@@ -278,6 +301,7 @@ mod tests {
                 high: 79.24,
                 low: 77.14,
                 close: 78.15,
+                volume: 1.0,
             },
         ];
 

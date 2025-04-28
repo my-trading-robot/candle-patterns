@@ -17,6 +17,9 @@ pub use pressure_buildup::*;
 use crate::analyzer::PatternResult;
 use crate::candle::*;
 
+mod limit_player;
+pub use limit_player::*;
+
 pub trait Pattern<TCandle: Candle> {
     fn matches(&self, candles: &BTreeMap<u64, TCandle>, level: f64) -> Option<PatternResult>;
 }

@@ -4,6 +4,7 @@ pub trait Candle {
     fn get_high(&self) -> f64;
     fn get_low(&self) -> f64;
     fn get_close(&self) -> f64;
+    fn get_volume(&self) -> f64;
 }
 
 #[derive(Debug, Clone)]
@@ -13,6 +14,7 @@ pub struct CandleInstance {
     pub high: f64,
     pub low: f64,
     pub close: f64,
+    pub volume: f64,
 }
 
 impl Candle for CandleInstance {
@@ -34,5 +36,9 @@ impl Candle for CandleInstance {
 
     fn get_close(&self) -> f64 {
         self.close
+    }
+
+    fn get_volume(&self) -> f64 {
+        self.volume
     }
 }

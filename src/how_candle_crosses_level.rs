@@ -97,6 +97,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 8.0);
@@ -116,6 +117,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 6.5);
@@ -131,6 +133,7 @@ mod tests {
             close: 5.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 6.5);
@@ -149,6 +152,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 4.5);
@@ -164,6 +168,7 @@ mod tests {
             close: 5.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 4.5);
@@ -182,6 +187,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 7.0);
@@ -200,6 +206,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 3.0);
@@ -219,6 +226,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 4.0);
@@ -237,6 +245,7 @@ mod tests {
             close: 6.0,
             high: 7.0,
             low: 4.0,
+            volume: 1.0,
         };
 
         let candle_position = HowCandleCrossesLevel::from_candle_and_level(&c, 5.5);

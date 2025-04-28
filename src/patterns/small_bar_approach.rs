@@ -110,6 +110,7 @@ mod tests {
                 high: 99.2,
                 low: 97.6,
                 close: 98.3, // body = 0.3, range = 1.6 → 0.1875
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2,
@@ -117,6 +118,7 @@ mod tests {
                 high: 99.3,
                 low: 98.1,
                 close: 98.7, // body = 0.3, range = 1.2 → 0.25
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 3,
@@ -124,6 +126,7 @@ mod tests {
                 high: 100.2,
                 low: 98.8,
                 close: 99.3, // body = 0.3, range = 1.4 → 0.2142
+                volume: 1.0,
             },
         ];
 
@@ -152,6 +155,7 @@ mod tests {
                 high: 103.0,
                 low: 101.5,
                 close: 102.3,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 2,
@@ -159,6 +163,7 @@ mod tests {
                 high: 102.8,
                 low: 101.8,
                 close: 102.2,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 3,
@@ -166,6 +171,7 @@ mod tests {
                 high: 102.2,
                 low: 100.5,
                 close: 101.7,
+                volume: 1.0,
             },
         ];
 

@@ -155,6 +155,7 @@ mod tests {
                 open: 5.0,
                 close: 6.0,
                 low: 4.0,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 01,
@@ -162,6 +163,7 @@ mod tests {
                 open: 4.0,
                 close: 5.0,
                 low: 3.0,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 02,
@@ -169,6 +171,7 @@ mod tests {
                 open: 5.0,
                 close: 6.0,
                 low: 4.0,
+                volume: 1.0,
             },
             CandleInstance {
                 time_key: 03,
@@ -176,6 +179,7 @@ mod tests {
                 open: 5.0,
                 close: 6.0,
                 low: 4.0,
+                volume: 1.0,
             },
         ];
 

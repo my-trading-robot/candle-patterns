@@ -69,6 +69,7 @@ mod tests {
             close: 0.0,
             high,
             low,
+            volume: 1.0,
         }
     }
 
