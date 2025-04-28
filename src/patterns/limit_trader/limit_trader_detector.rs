@@ -10,12 +10,14 @@ pub struct LimitTraderDetectorPattern {
     pub tolerance_percent: f64,
     pub min_depth: usize,
 }
+
+#[derive(Debug, Clone)]
 pub struct LimitTraderSignal {
     pub level: f64,               
     pub side: LimitTraderSide, 
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum LimitTraderSide {
     Buyer,  // Limit Trader on lows
     Seller, // Limit Trader on highs
@@ -79,9 +81,7 @@ impl LimitTraderDetectorPattern {
 #[cfg(test)]
 mod tests {
     use crate::candle::CandleInstance;
-
     use super::*;
-
 
     #[test]
     fn detects_limit_seller() {
