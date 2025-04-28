@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 
 use crate::candle::Candle;
 
-const LPD_TOLERANCE_PERCENT: f64 = 0.2;
-const LPD_MIN_DEPTH: usize = 3;
+const LTD_TOLERANCE_PERCENT: f64 = 0.2;
+const LTD_MIN_DEPTH: usize = 3;
 
 #[derive(Debug, Clone)]
 pub struct LimitTraderDetectorPattern {
@@ -24,8 +24,8 @@ pub enum LimitTraderSide {
 impl Default for LimitTraderDetectorPattern {
     fn default() -> Self {
         Self {
-            tolerance_percent: LPD_TOLERANCE_PERCENT,
-            min_depth: LPD_MIN_DEPTH,
+            tolerance_percent: LTD_TOLERANCE_PERCENT,
+            min_depth: LTD_MIN_DEPTH,
         }
     }
 }
