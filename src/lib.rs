@@ -10,6 +10,8 @@ mod atr;
 pub use atr::*;
 mod dt_utils;
 pub use dt_utils::*;
+mod math;
+pub use math::*;
 
 pub fn in_range(value: f64, lower_bound: f64, upper_bound: f64) -> bool {
     value >= lower_bound && value <= upper_bound
