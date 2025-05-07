@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::{candle::Candle, round_to_precision};
 
+pub const LTD_DEFAULT_TOLERANCE: u32 = 2;
 pub const LTD_MIN_WINDOW_SIZE: usize = 3;
 
 #[derive(Debug, Clone)]
@@ -126,7 +127,7 @@ mod tests {
 
         let detector = LimitTraderDetectorPattern::new(
             accuracy, 
-            2, 
+            LTD_DEFAULT_TOLERANCE, 
             LTD_MIN_WINDOW_SIZE, 
         );
         let result = detector.detect(&map);
@@ -160,7 +161,7 @@ mod tests {
 
         let detector = LimitTraderDetectorPattern::new(
             accuracy, 
-            2, 
+            LTD_DEFAULT_TOLERANCE, 
             LTD_MIN_WINDOW_SIZE, 
         );
         let result = detector.detect(&map);
@@ -191,7 +192,7 @@ mod tests {
 
         let detector = LimitTraderDetectorPattern::new(
             accuracy, 
-            2, 
+            LTD_DEFAULT_TOLERANCE, 
             LTD_MIN_WINDOW_SIZE, 
         );
         let result = detector.detect(&map);
@@ -216,7 +217,7 @@ mod tests {
 
         let detector = LimitTraderDetectorPattern::new(
             accuracy, 
-            2, 
+            LTD_DEFAULT_TOLERANCE, 
             LTD_MIN_WINDOW_SIZE, 
         );
         let result = detector.detect(&map);
@@ -243,7 +244,7 @@ mod tests {
 
         let detector = LimitTraderDetectorPattern::new(
             accuracy, 
-            2, 
+            LTD_DEFAULT_TOLERANCE, 
             LTD_MIN_WINDOW_SIZE, 
         );
         let result = detector.detect(&map);
@@ -284,7 +285,7 @@ mod tests {
 
         let detector = LimitTraderDetectorPattern::new(
             accuracy, 
-            2, 
+            LTD_DEFAULT_TOLERANCE, 
             LTD_MIN_WINDOW_SIZE, 
         );
         let result = detector.detect(&map);
